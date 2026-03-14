@@ -11,14 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	outputDir string
-	account   string
-)
+var outputDir string
 
 func init() {
 	downloadCmd.Flags().StringVarP(&outputDir, "output", "o", ".", "output directory")
-	downloadCmd.Flags().StringVarP(&account, "account", "a", "", "gws account email to use")
 	rootCmd.AddCommand(downloadCmd)
 }
 
@@ -35,7 +31,7 @@ func runDownload(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("could not extract document ID from %q", args[0])
 	}
 
-	client := gws.NewClient(account)
+	client := gws.NewClient()
 	conv := converter.NewMarkdownConverter()
 	fs := exporter.NewFilesystemExporter()
 

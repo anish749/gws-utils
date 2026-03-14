@@ -7,18 +7,16 @@ import (
 )
 
 // Client wraps the gws CLI for making Google Workspace API calls.
-type Client struct {
-	account string
-}
+type Client struct{}
 
-func NewClient(account string) *Client {
-	return &Client{account: account}
+func NewClient() *Client {
+	return &Client{}
 }
 
 // GetDocument fetches a Google Doc with all tab content.
 func (c *Client) GetDocument(docID string) (*Document, error) {
 	params := map[string]any{
-		"documentId":        docID,
+		"documentId":         docID,
 		"includeTabsContent": true,
 	}
 	paramsJSON, err := json.Marshal(params)
@@ -41,10 +39,6 @@ func (c *Client) GetDocument(docID string) (*Document, error) {
 
 func (c *Client) run(args ...string) ([]byte, error) {
 	cmd := exec.Command("gws", args...)
-	if c.account != "" {
-		cmd.Env = append(cmd.Environ(), "GOOGLE_WORKSPACE_CLI_ACCOUNT="+c.account)
-	}
-
 	out, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
